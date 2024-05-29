@@ -55,6 +55,9 @@ def load_data_to_mongodb(pages=5):
                     if credits:
                         for actor in credits['cast']:
                             collection.insert_one({'type': 'actor', 'id': actor['id'], 'name': actor['name']})
+                            actor_ids = [actor['id'] for actor in credits.get('cast', [])] if credits else []
+                            # Add actor_ids to the movie details
+                            movie_details['actor_ids'] = actor_ids
                         for genre in movie_details['genres']:
                             collection.insert_one({'type': 'genre', 'id': genre['id'], 'name': genre['name']})
         else:
