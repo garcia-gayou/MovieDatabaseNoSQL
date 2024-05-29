@@ -1,9 +1,14 @@
+import os
 import requests
 import pymongo
 from neo4j import GraphDatabase
+from dotenv import load_dotenv
+
+# Cargar las variables de entorno
+load_dotenv()
 
 # Configuración de la API de TMDb
-api_key = 'TU_API_KEY'
+api_key = os.getenv('TMDB_API_KEY')
 base_url = 'https://api.themoviedb.org/3'
 
 # Conexión a MongoDB
@@ -12,16 +17,19 @@ db = mongo_client["tmdb_db"]
 collection = db["movies"]
 
 # Función para obtener datos de películas populares
-def get_popular_movies():
-    url = f"{base_url}/movie/popular?api_key={api_key}&language=en-US&page=1"
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()['results']
-    else:
-        return []
+def get_popular_movies(pages=5):
+    all_movies = []
+    for page in range(1, pages + 1):
+        url = f"{base_url}/movie/popular?api_key={api_key}&language=en-US&page={page}"
+        response = requests.get(url)
+        if response.status_code == 200:
+            all_movies.extend(response.json()['results'])
+        else:
+            break
+    return all_movies
 
 # Obtener y guardar datos de películas populares en MongoDB
-movies = get_popular_movies()
+movies = get_popular_movies(pages=5)  # Obtiene 5 páginas de resultados (100 películas)
 for movie in movies:
     collection.insert_one(movie)
     print(f"Inserted movie {movie['title']} into MongoDB")

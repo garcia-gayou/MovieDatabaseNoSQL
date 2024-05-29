@@ -24,6 +24,8 @@ services:
     volumes:
       - .:/app
     working_dir: /app
+    env_file:
+      - .env
     command: bash -c "pip install -r requirements.txt && python main.py"
     depends_on:
       - mongodb
