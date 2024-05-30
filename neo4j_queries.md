@@ -68,6 +68,9 @@ LIMIT 1
 ```
 
 ## Actores más alejados (Solución Analítica)
+En esta alternativa mostramos el camino en una lista en lugar de buscarlo visualmente.
+
+```cypher
 MATCH (a:Actor {name: 'Scarlett Johansson'}), (b:Actor)
 WHERE a <> b
 WITH b, shortestPath((a)-[:ACTED_IN*]-(b)) AS p
@@ -113,3 +116,4 @@ WITH b, collect(actorMoviePair) AS actorMoviePairs
 RETURN 'Bruce Willis' AS StartingActor, b.name AS Actor, actorMoviePairs, size(actorMoviePairs) AS MovieCount
 ORDER BY MovieCount DESC
 LIMIT 1
+```
