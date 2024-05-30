@@ -1,6 +1,6 @@
 # MovieDatabaseNoSQL
 
-Este proyecto conecta a la API de TMDb, guarda datos de películas populares en MongoDB, y luego transforma y carga esos datos en Neo4j.
+Este proyecto conecta a la API de TMDb, guarda datos de películas populares en MongoDB, y luego transforma y carga esos datos en Neo4j. También incluye las consultas que realizamos una vez cargadas las bases de datos.
 
 1. Clona este repositorio:
     ```bash
