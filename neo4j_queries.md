@@ -67,8 +67,49 @@ ORDER BY MovieCount DESC
 LIMIT 1
 ```
 
+## Actores más alejados (Solución Analítica)
+MATCH (a:Actor {name: 'Scarlett Johansson'}), (b:Actor)
+WHERE a <> b
+WITH b, shortestPath((a)-[:ACTED_IN*]-(b)) AS p
+WHERE p IS NOT NULL
+UNWIND [index IN range(0, size(nodes(p)) - 2) | 
+  CASE 
+    WHEN (nodes(p)[index]):Movie THEN [(nodes(p)[index + 1]).name, (nodes(p)[index]).title]
+    ELSE NULL 
+  END] AS actorMoviePair
+WITH b, collect(actorMoviePair) AS actorMoviePairs
+RETURN 'Scarlett Johansson' AS StartingActor, b.name AS Actor, actorMoviePairs, size(actorMoviePairs) AS MovieCount
+ORDER BY MovieCount DESC
+LIMIT 1
 
+UNION
 
+MATCH (a:Actor {name: 'Timothée Chalamet'}), (b:Actor)
+WHERE a <> b
+WITH b, shortestPath((a)-[:ACTED_IN*]-(b)) AS p
+WHERE p IS NOT NULL
+UNWIND [index IN range(0, size(nodes(p)) - 2) | 
+  CASE 
+    WHEN (nodes(p)[index]):Movie THEN [(nodes(p)[index + 1]).name, (nodes(p)[index]).title]
+    ELSE NULL 
+  END] AS actorMoviePair
+WITH b, collect(actorMoviePair) AS actorMoviePairs
+RETURN 'Timothée Chalamet' AS StartingActor, b.name AS Actor, actorMoviePairs, size(actorMoviePairs) AS MovieCount
+ORDER BY MovieCount DESC
+LIMIT 1
 
+UNION
 
-
+MATCH (a:Actor {name: 'Bruce Willis'}), (b:Actor)
+WHERE a <> b
+WITH b, shortestPath((a)-[:ACTED_IN*]-(b)) AS p
+WHERE p IS NOT NULL
+UNWIND [index IN range(0, size(nodes(p)) - 2) | 
+  CASE 
+    WHEN (nodes(p)[index]):Movie THEN [(nodes(p)[index + 1]).name, (nodes(p)[index]).title]
+    ELSE NULL 
+  END] AS actorMoviePair
+WITH b, collect(actorMoviePair) AS actorMoviePairs
+RETURN 'Bruce Willis' AS StartingActor, b.name AS Actor, actorMoviePairs, size(actorMoviePairs) AS MovieCount
+ORDER BY MovieCount DESC
+LIMIT 1
